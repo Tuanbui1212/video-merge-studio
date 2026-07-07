@@ -191,16 +191,18 @@ edit-video/
 
 ## Lỗi thường gặp
 
-### WebSocket / Axios Network Error (`192.168.1.26:8003`)
+### WebSocket / Axios Network Error (`<IP-LAN>:8003`)
 
 - **Backend chưa chạy** — `docker compose ps`, chỉ có `video_frontend` Up là chưa đủ.
 - Firewall chặn port **8003**.
 - `NEXT_PUBLIC_API_URL` sai IP → sửa `.env` và **build lại frontend**.
 
-### Preview task báo “Định dạng video không được hỗ trợ…”
+### Preview không phát / báo lỗi định dạng
 
-- Thường do tên file có **ký tự Unicode** (tiếng Việt, `｜`…) — đã xử lý ở backend.
-- Tab **Media** vẫn xem được vì dùng blob local; tab **Tasks** gọi API server.
+- Video **TikTok / HEVC**: tab Media có thể chỉ nghe tiếng — chờ **icon vàng**, app tự tạo preview H.264 qua API.
+- **Backend chưa chạy** hoặc sai `NEXT_PUBLIC_API_URL` → kiểm tra `http://<IP-LAN>:8003/health`.
+- File lớn / preview đang build → đợi vài giây, bấm **Thử lại** trên player.
+- Tên file tiếng Việt / ký tự đặc biệt: backend đã hỗ trợ; nếu vẫn lỗi, thử đổi tên file gốc rồi upload lại.
 
 ### `npm run dev` ở thư mục gốc lỗi
 
