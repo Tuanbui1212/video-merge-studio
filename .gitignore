@@ -1,0 +1,48 @@
+# --- Dữ liệu runtime (video, preview, output) ---
+uploads/*
+!uploads/.gitkeep
+outputs/*
+!outputs/.gitkeep
+previews/*
+!previews/.gitkeep
+previews/temp/*
+!previews/temp/.gitkeep
+
+# Video test local (không phải source code)
+video/
+
+# --- Secrets & cấu hình máy local ---
+.env
+.env.local
+backend/.env
+
+# Giữ template cấu hình
+!.env.example
+!frontend/env.local.example
+
+# --- Python ---
+backend/venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+# --- Node / Next.js ---
+node_modules/
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/build/
+*.tsbuildinfo
+
+# --- OS & IDE ---
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# --- Temp / debug ---
+tmp-merge.json
+*.log

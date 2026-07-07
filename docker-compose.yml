@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: video_db
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: videodb
+    ports:
+      - "${DB_PORT:-5433}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
+
+  backend:
+    build:
+      context: ./backend
+    container_name: video_backend
+    ports:
+      - "${BACKEND_PORT:-8003}:8000"
+    environment:
+      - DATABASE_URL=postgresql://user:password@db:5432/videodb
+      - BACKEND_PORT=${BACKEND_PORT:-8003}
+    volumes:
+      - ./backend/app:/app/app
+      - ./uploads:/app/uploads
+      - ./outputs:/app/outputs
+      - ./previews:/app/previews
+    depends_on:
+      - db
+    restart: always
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://127.0.0.1:${BACKEND_PORT:-8003}}
+    container_name: video_frontend
+    ports:
+      - "${FRONTEND_PORT:-3003}:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    environment:
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://127.0.0.1:${BACKEND_PORT:-8003}}
+      - NEXT_PUBLIC_FRONTEND_PORT=${FRONTEND_PORT:-3003}
+      - NEXT_PUBLIC_BACKEND_PORT=${BACKEND_PORT:-8003}
+      - NEXT_PUBLIC_DB_PORT=${DB_PORT:-5433}
+    depends_on:
+      - backend
+    restart: always
+
+volumes:
+  postgres_data:
